@@ -7,11 +7,11 @@ import pandas as pd
 
 from CTAB_GAN.model.eval.evaluation import get_utility_metrics, stat_sim, privacy_metrics
 
-cur_date = '2022-03-28'
+cur_date = '2022-03-29'
 exp = 0
 classifiers_list = ["lr", "dt", "rf", "mlp", "svm"]
 dataset = "czech_bank"
-real_datafile = 'trans_0.csv'
+real_datafile = 'trans_1.csv'
 fake_datafile = 'fake_{exp}_{cur_date}.csv'.format(exp=exp, cur_date=cur_date)
 
 result_file = 'result_' + fake_datafile
@@ -22,11 +22,11 @@ fake_paths = [os.path.join(Path(__file__).parent, 'resources/fake_datasets', dat
 result_path = os.path.join(Path(__file__).parent, 'resources/eval_results/', result_file)
 
 # ML Utility Evaluation
-# result_mat = get_utility_metrics(real_path, fake_paths, "MinMax", classifiers_list, test_ratio=0.20)
-# result_df_ml = pd.DataFrame(result_mat, columns=["Acc", "AUC", "F1_Score"])
-# result_df_ml.index = classifiers_list
+result_mat = get_utility_metrics(real_path, fake_paths, "MinMax", classifiers_list, test_ratio=0.30)
+result_df_ml = pd.DataFrame(result_mat, columns=["Acc", "AUC", "F1_Score"])
+result_df_ml.index = classifiers_list
 
-# result_dict['ml_utility'] = result_df_ml
+result_dict['ml_utility'] = result_df_ml
 
 col_categorical = ['account_id', 'type', 'operation', 'k_symbol', 'bank', 'account']
 

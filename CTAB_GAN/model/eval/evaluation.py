@@ -34,15 +34,15 @@ def supervised_model_training(x_train, y_train, x_test, y_test, model_name):
 
   # Selecting the model
   if model_name == 'lr':
-    model  = LogisticRegression(random_state=42,max_iter=500)
+    model  = LogisticRegression(random_state=0,max_iter=500)
   elif model_name == 'svm':
-    model  = svm.SVC(random_state=42,probability=True)
+    model  = svm.SVC(random_state=0,probability=True)
   elif model_name == 'dt':
-    model  = tree.DecisionTreeClassifier(random_state=42)
+    model  = tree.DecisionTreeClassifier(random_state=0)
   elif model_name == 'rf':
-    model = RandomForestClassifier(random_state=42)
+    model = RandomForestClassifier(random_state=0)
   elif model_name == "mlp":
-    model = MLPClassifier(random_state=42,max_iter=100)
+    model = MLPClassifier(random_state=0,max_iter=100)
 
   # Fitting the model and computing predictions on test data
   model.fit(x_train, y_train)
@@ -91,7 +91,7 @@ def get_utility_metrics(real_path, fake_paths, scaler="MinMax", classifiers=["lr
     data_dim = data_real.shape[1]
     data_real_y = data_real[:,-1]
     data_real_X = data_real[:,:data_dim-1]
-    X_train_real, X_test_real, y_train_real, y_test_real = model_selection.train_test_split(data_real_X ,data_real_y, test_size=test_ratio, stratify=data_real_y,random_state=42)
+    X_train_real, X_test_real, y_train_real, y_test_real = model_selection.train_test_split(data_real_X, data_real_y, test_size=test_ratio, stratify=data_real_y,random_state=0)
 
     # Selecting scaling method
     if scaler=="MinMax":
@@ -121,7 +121,7 @@ def get_utility_metrics(real_path, fake_paths, scaler="MinMax", classifiers=["lr
       # Spliting synthetic data to obtain corresponding synthetic training dataset
       data_fake_y = data_fake[:,-1]
       data_fake_X = data_fake[:,:data_dim-1]
-      X_train_fake, _ , y_train_fake, _ = model_selection.train_test_split(data_fake_X ,data_fake_y, test_size=test_ratio, stratify=data_fake_y,random_state=42)
+      X_train_fake, _ , y_train_fake, _ = model_selection.train_test_split(data_fake_X ,data_fake_y, test_size=test_ratio, stratify=data_fake_y,random_state=0)
 
       # Selecting scaling method
       if scaler=="MinMax":
