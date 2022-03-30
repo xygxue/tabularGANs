@@ -84,8 +84,13 @@ def get_utility_metrics(real_path, fake_paths, scaler="MinMax", classifiers=["lr
 
     """
 
-    # Loading the real dataset
-    data_real = pd.read_csv(real_path).to_numpy()
+    # Read fake dataset column
+    data_fake = pd.read_csv(fake_paths[0])
+    data_fake_col = data_fake.columns.tolist()
+
+    # Loading the real dataset and reorder the real dataset to have same column order as fake
+    data_real = pd.read_csv(real_path)
+    data_real = data_real[data_fake_col].to_numpy()
 
     # Spliting the real data into train and test datasets
     data_dim = data_real.shape[1]
@@ -107,7 +112,7 @@ def get_utility_metrics(real_path, fake_paths, scaler="MinMax", classifiers=["lr
     # Computing metrics across ML models trained using real training data on real test data
     all_real_results = []
     for classifier in classifiers:
-      real_results = supervised_model_training(X_train_real_scaled,y_train_real,X_test_real_scaled,y_test_real,classifier)
+      real_results = supervised_model_training(X_train_real_scaled,y_train_real,X_test_real_scaled, y_test_real, classifier)
       all_real_results.append(real_results)
 
     # Computing metrics across ML models trained using corresponding synthetic training datasets on real test data  
