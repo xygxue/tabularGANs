@@ -39,9 +39,10 @@ def preprocess(filename, date_column, le_map_path):
     csv_path = os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, filename)
     raw = pd.read_csv(csv_path)
     raw[['amount', 'balance']] = raw[['amount', 'balance']].astype(int)
-    cyclical_encode(raw, date_column)
-    df = raw.drop(columns=['date', 'trans_id'])
-    label_encode(df, cat_col, le_map_path)
+    # cyclical_encode(raw, date_column)
+    df = raw.drop(columns=['trans_id'])
+    df[date_column]= pd.to_datetime(df[date_column])
+    # label_encode(df, cat_col, le_map_path)
     # raw_one_hot = one_hot(raw, one_hot_col)
     return df
 
@@ -49,5 +50,5 @@ def preprocess(filename, date_column, le_map_path):
 processed = preprocess('clean_trans.csv', 'date', le_map_path)
 
 splited_df = np.array_split(processed, 20)
-splited_df[0].to_csv(os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, 'trans_1.csv'), index=False)
+splited_df[0].to_csv(os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, 'trans_3.csv'), index=False)
 
