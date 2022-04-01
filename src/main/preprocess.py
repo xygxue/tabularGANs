@@ -49,6 +49,6 @@ def preprocess(filename, date_column, le_map_path):
 
 processed = preprocess('clean_trans.csv', 'date', le_map_path)
 
-splited_df = np.array_split(processed, 20)
-splited_df[0].to_csv(os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, 'trans_3.csv'), index=False)
+splited_df = np.array_split(processed, 5)
+splited_df[0].to_csv(os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, 'trans_4.csv'), index=False)
 
