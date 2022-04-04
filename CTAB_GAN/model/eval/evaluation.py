@@ -14,6 +14,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+
 def supervised_model_training(x_train, y_train, x_test, y_test, model_name):
 
   """
@@ -90,14 +91,18 @@ def get_utility_metrics(real_path, fake_paths, scaler="MinMax", classifiers=["lr
 
     # Loading the real dataset and reorder the real dataset to have same column order as fake
     data_real = pd.read_csv(real_path)
-    data_real = data_real[data_fake_col].to_numpy()
+    data_real = data_real[data_fake_col]
 
     # Spliting the real data into train and test datasets
     data_dim = data_real.shape[1]
-    data_real_y = data_real[:,-1]
-    data_real_X = data_real[:,:data_dim-1]
-    X_train_real, X_test_real, y_train_real, y_test_real = model_selection.train_test_split(data_real_X, data_real_y, test_size=test_ratio, stratify=data_real_y,random_state=0)
-
+    # here could be changed to other column for ml utility measurements
+    data_real_y = data_real['operation'].to_numpy()
+    data_real_X = data_real.drop(columns=['operation']).to_numpy()
+    X_train_real, X_test_real, y_train_real, y_test_real = model_selection.train_test_split(data_real_X,
+                                                                                            data_real_y,
+                                                                                            test_size=test_ratio,
+                                                                                            stratify=data_real_y,
+                                                                                            random_state=0)
     # Selecting scaling method
     if scaler=="MinMax":
       scaler_real = MinMaxScaler()
@@ -121,12 +126,16 @@ def get_utility_metrics(real_path, fake_paths, scaler="MinMax", classifiers=["lr
     for fake_path in fake_paths:
 
       # Loading synthetic dataset
-      data_fake  = pd.read_csv(fake_path).to_numpy()
+      data_fake  = pd.read_csv(fake_path)
 
       # Spliting synthetic data to obtain corresponding synthetic training dataset
-      data_fake_y = data_fake[:,-1]
-      data_fake_X = data_fake[:,:data_dim-1]
-      X_train_fake, _ , y_train_fake, _ = model_selection.train_test_split(data_fake_X ,data_fake_y, test_size=test_ratio, stratify=data_fake_y,random_state=0)
+      data_fake_y = data_fake['operation'].to_numpy()
+      data_fake_X = data_fake.drop(columns=['operation']).to_numpy()
+      X_train_fake, _, y_train_fake, _ = model_selection.train_test_split(data_fake_X,
+                                                                           data_fake_y,
+                                                                           test_size=test_ratio,
+                                                                           stratify=data_fake_y,
+                                                                           random_state=0)
 
       # Selecting scaling method
       if scaler=="MinMax":

@@ -6,11 +6,12 @@ import numpy as np
 import pandas as pd
 
 from CTAB_GAN.model.eval.evaluation import get_utility_metrics, stat_sim, privacy_metrics
+from cswgan.lib.plot import compare_hists
 
-cur_date = '2022-03-29'
+cur_date = '2022-04-01'
 exp = 2
-real_datafile = 'trans_2.csv'
-fake_datafile = 'fake_2_{cur_date}.csv'.format(exp=exp, cur_date=cur_date)
+real_datafile = 'labelencode_trans_3.csv'
+fake_datafile = 'labelencode_ctgan_fake_3_2022-03-31.csv'.format(exp=exp, cur_date=cur_date)
 
 classifiers_list = ["lr", "dt", "rf", "mlp", "svm"]
 dataset = "czech_bank"
@@ -55,3 +56,7 @@ result_file_pri = 'privacy_' + fake_datafile
 privacy_results.to_csv(os.path.join(result_path, result_file_pri))
 
 
+# plot the histogram for each column in fake and real data
+x_fake = pd.read_csv(fake_paths[0])
+x_real = pd.read_csv(real_path)
+compare_hists(x_real, x_fake, ax=None, log=False, label=None)

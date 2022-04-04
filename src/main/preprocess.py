@@ -5,11 +5,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from sklearn import preprocessing
+from sklearn.preprocessing import LabelEncoder
 
-dataset = 'czech_bank'
-mapfile = 'mapping.pickle'
-le_map_path = os.path.join(Path(__file__).parent, 'resources/label_encode_map', dataset, mapfile)
-cat_col = ['account_id', 'type', 'operation', 'k_symbol', 'bank', 'account']
+DATASET = 'czech_bank'
+MAPFILE = 'mapping.pickle'
+LE_MAP_PATH = os.path.join(Path(__file__).parent, 'resources/label_encode_map', DATASET, MAPFILE)
+CAT_COL = ['account_id', 'type', 'operation', 'k_symbol', 'bank', 'account']
+DATE_COLUMN = 'date'
 
 
 def label_encode(df, cat_col, mapping_path):
@@ -35,7 +37,14 @@ def cyclical_encode(df, date_column):
     df['dayofweek'] = date_col.dayofweek
 
 
-def preprocess(filename, date_column, le_map_path):
+def time_diff(df, date_column):
+    df[date_column] = pd.to_datetime(df[date_column])
+    diff = df.loc[:, [date_column]].sub(df.loc[0, [date_column]], axis='columns')/np.timedelta64(1, "D").astype("int64")
+    df[date_column] = diff[date_column].dt.days
+    return df
+
+
+def preprocess(filename, date_column, le_map_path, dataset):
     csv_path = os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, filename)
     raw = pd.read_csv(csv_path)
     raw[['amount', 'balance']] = raw[['amount', 'balance']].astype(int)
@@ -47,8 +56,24 @@ def preprocess(filename, date_column, le_map_path):
     return df
 
 
-processed = preprocess('clean_trans.csv', 'date', le_map_path)
+# processed = preprocess('clean_trans.csv', DATE_COLUMN, LE_MAP_PATH, DATASET)
+#
+# splited_df = np.array_split(processed, 20)
+# splited_df[0].to_csv(os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, 'trans_3.csv'), index=False)
 
-splited_df = np.array_split(processed, 5)
-splited_df[0].to_csv(os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, 'trans_4.csv'), index=False)
 
+def process(filename, cat_col, date_column, dataset):
+    csv_path = os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, filename)
+    df = pd.read_csv(csv_path)
+    df['first_day'] = '1993-01-01'
+    df['first_day'] = pd.to_datetime(df['first_day'])
+    df[date_column] = pd.to_datetime(df[date_column])
+    df[date_column] -= df['first_day']
+    df[date_column] = df[date_column].dt.days
+    df[cat_col] = df[cat_col].apply(LabelEncoder().fit_transform)
+    df_out = df.drop(columns=['first_day'])
+    df_out.to_csv(os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, 'labelencode_' + filename),
+              index=False)
+
+
+process('trans_4.csv', CAT_COL, DATE_COLUMN, DATASET)

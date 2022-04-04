@@ -4,8 +4,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
-from lib.test_metrics import *
-from lib.utils import to_numpy
+from cswgan.lib.test_metrics import *
+from cswgan.lib.utils import to_numpy
 
 
 def set_style(ax):
