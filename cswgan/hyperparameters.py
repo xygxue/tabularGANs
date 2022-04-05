@@ -45,4 +45,9 @@ SIGCWGAN_CONFIGS = dict(
         sig_config_past=SignatureConfig(depth=3, augmentations=get_standard_augmentation(0.2)),
         sig_config_future=SignatureConfig(depth=3, augmentations=get_standard_augmentation(0.2)),
     ),
+    CZB=SigCWGANConfig(
+        mc_size=2000,
+        sig_config_past=SignatureConfig(depth=3, augmentations=get_standard_augmentation(0.2)),
+        sig_config_future=SignatureConfig(depth=3, augmentations=get_standard_augmentation(0.2)),
+    ),
 )

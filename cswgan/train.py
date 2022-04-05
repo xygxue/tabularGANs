@@ -94,6 +94,8 @@ def get_dataset_configuration(dataset):
         generator = (('lag={}'.format(lag), dict(lag=lag)) for lag in [3])
     elif dataset == 'SINE':
         generator = [('a', dict())]
+    elif dataset == "CZB":
+        generator = [('A0000002378', dict(acc_id='A0000002378'))]
     else:
         raise Exception('%s not a valid data type.' % dataset)
     return generator
@@ -114,7 +116,7 @@ def main(args):
         for algo_id in args.algos:
             for seed in range(args.initial_seed, args.initial_seed + args.num_seeds):
                 base_config = BaseConfig(
-                        device='cuda:{}'.format(args.device) if args.use_cuda and torch.cuda.is_available() else 'cpu',
+                    device='cuda:{}'.format(args.device) if args.use_cuda and torch.cuda.is_available() else 'cpu',
                     seed=seed,
                     batch_size=args.batch_size,
                     hidden_dims=args.hidden_dims,
@@ -147,7 +149,7 @@ if __name__ == '__main__':
     parser.add_argument('-num_seeds', default=1, type=int)
     parser.add_argument('-initial_seed', default=0, type=int)
     #parser.add_argument('-datasets', default=['ARCH', 'STOCKS', 'ECG', 'VAR', ], nargs="+")
-    parser.add_argument('-datasets', default=['STOCKS', 'ARCH', 'VAR', ], nargs="+")
+    parser.add_argument('-datasets', default=['STOCKS', 'ARCH', 'VAR', 'CZB'], nargs="+")
     parser.add_argument('-algos', default=['SigCWGAN', 'GMMN', 'RCGAN', 'TimeGAN', 'RCWGAN', 'CWGAN',], nargs="+")
 
 

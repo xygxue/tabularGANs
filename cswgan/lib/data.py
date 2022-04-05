@@ -149,7 +149,7 @@ def get_arch_dataset(window_size, lag=4, bt=0.055, N=5000, dim=1):
     return pipeline, data_raw, data_pre
 
 
-def get_cz_bank_data():
+def get_cz_bank_data(acc_id=None):
     CAT = ['account_id', 'type', 'operation', 'k_symbol', 'bank', 'account']
     LOG = ['amount', 'balance']
     MIXED = {'k_symbol': [7], 'bank': [13], 'account': [7665]}
@@ -159,7 +159,9 @@ def get_cz_bank_data():
     csv_path = os.path.join(Path(__file__).parents[2], 'src/main/resources/real_datasets', 'czech_bank', 'clean_trans.csv')
     df = pd.read_csv(csv_path)
     df = df.set_index('date')
-    data_raw = df.loc[df['account_id'] == "A0000002378"]
+    if not acc_id:
+        acc_id == 'A0000002378'
+    data_raw = df.loc[df['account_id'] == acc_id]
     data_raw = data_raw.drop(columns=['account_id', 'trans_id'])
     data_prep = DataPrep(data_raw, categorical=CAT,
                          log=LOG,
@@ -213,6 +215,8 @@ def get_data(data_type, p, q, **data_params):
         )
     elif data_type == 'ECG':
         pipeline, x_real_raw, x_real = get_mit_arrythmia_dataset(**data_params)
+    elif data_type == 'CZB':
+        pipeline, x_real_raw, x_real = get_cz_bank_data(**data_params)
     else:
         raise NotImplementedError('Dataset %s not valid' % data_type)
     assert x_real.shape[0] == 1
@@ -252,6 +256,3 @@ def download_mit_ecg_dataset():
     zf.extractall(path='./data')
     zf.close()
     os.remove('./mit_db.zip')
-
-
-get_cz_bank_data()
