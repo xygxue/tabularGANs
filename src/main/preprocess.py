@@ -76,4 +76,4 @@ def process(filename, cat_col, date_column, dataset):
               index=False)
 
 
-process('trans_4.csv', CAT_COL, DATE_COLUMN, DATASET)
+

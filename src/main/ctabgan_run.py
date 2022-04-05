@@ -10,8 +10,8 @@ num_exp = 1
 
 dataset = "czech_bank"
 real_datafile = 'trans_1.csv'
-real_path = os.path.join(Path(__file__).parent, 'src/main/resources/real_datasets', dataset, real_datafile)
-fake_path = os.path.join(Path(__file__).parent, 'src/main/resources/fake_datasets', dataset, 'fake_{exp}_{cur_date}.csv')
+real_path = os.path.join(Path(__file__).parent, 'resources/real_datasets', dataset, real_datafile)
+fake_path = os.path.join(Path(__file__).parent, 'resources/fake_datasets', dataset, 'fake_{exp}_{cur_date}.csv')
 
 
 synthesizer = CTABGAN(raw_csv_path=real_path,

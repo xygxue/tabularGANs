@@ -1,10 +1,14 @@
 import os
 import pickle
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import torch
+from sklearn.preprocessing import OneHotEncoder
 from tqdm import tqdm
+
+from CTAB_GAN.model.pipeline.data_preparation import DataPrep
 
 
 class Pipeline:
@@ -145,6 +149,32 @@ def get_arch_dataset(window_size, lag=4, bt=0.055, N=5000, dim=1):
     return pipeline, data_raw, data_pre
 
 
+def get_cz_bank_data():
+    CAT = ['account_id', 'type', 'operation', 'k_symbol', 'bank', 'account']
+    LOG = ['amount', 'balance']
+    MIXED = {'k_symbol': [7], 'bank': [13], 'account': [7665]}
+    INTEGER = []
+    PROBLEM = {"Classification": 'type'}
+    cat_onehot = ['type', 'operation', 'k_symbol', 'bank', 'account']
+    csv_path = os.path.join(Path(__file__).parents[2], 'src/main/resources/real_datasets', 'czech_bank', 'clean_trans.csv')
+    df = pd.read_csv(csv_path)
+    df = df.set_index('date')
+    data_raw = df.loc[df['account_id'] == "A0000002378"]
+    data_raw = data_raw.drop(columns=['account_id', 'trans_id'])
+    data_prep = DataPrep(data_raw, categorical=CAT,
+                         log=LOG,
+                         mixed=MIXED,
+                         integer=INTEGER,
+                         type=PROBLEM,
+                         test_ratio=0.2)
+    data_onthot = pd.get_dummies(data_prep.df, columns=cat_onehot, drop_first=True)
+
+    data_torch = torch.tensor(data_onthot.values).float()
+    pipeline = Pipeline(steps=[('standard_scale', StandardScalerTS(axis=(0, 1)))])
+    data_preprocessed = pipeline.transform(data_torch)
+    return pipeline, data_raw, data_preprocessed
+
+
 def load_pickle(path):
     with open(path, 'rb') as f:
         return pickle.load(f)
@@ -222,3 +252,6 @@ def download_mit_ecg_dataset():
     zf.extractall(path='./data')
     zf.close()
     os.remove('./mit_db.zip')
+
+
+get_cz_bank_data()
