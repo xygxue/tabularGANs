@@ -178,8 +178,8 @@ def stat_sim(real_path,fake_path,cat_cols=None):
   """
 
   # Loading real and synthetic data
-  real = pd.read_csv(real_path)
-  fake = pd.read_csv(fake_path)
+  real = pd.read_csv(real_path).set_index('date')
+  fake = pd.read_csv(fake_path).set_index('date')
 
   # Computing the real and synthetic pair-wise correlations
   real_corr = compute_associations(real, nominal_columns=cat_cols)
@@ -200,24 +200,29 @@ def stat_sim(real_path,fake_path,cat_cols=None):
       # Computing the real and synthetic probabibility mass distributions (pmf) for each categorical column
       real_pmf=(real[column].value_counts()/real[column].value_counts().sum())
       fake_pmf=(fake[column].value_counts()/fake[column].value_counts().sum())
-      categories = (fake[column].value_counts()/fake[column].value_counts().sum()).keys().tolist()
+      categories_fake = (fake[column].value_counts()/fake[column].value_counts().sum()).keys().tolist()
+      categories_real = (real[column].value_counts()/real[column].value_counts().sum()).keys().tolist()
 
       # Ensuring the pmfs of real and synthetic data have the categories within a column in the same order
-      sorted_categories = sorted(categories)
+      sorted_categories_fake = sorted(categories_fake)
+      sorted_categories_real = sorted(categories_real)
 
       real_pmf_ordered = []
       fake_pmf_ordered = []
 
-      for i in sorted_categories:
-        real_pmf_ordered.append(real_pmf[i])
+      for i in sorted_categories_fake:
         fake_pmf_ordered.append(fake_pmf[i])
+        real_pmf_ordered.append(real_pmf[i])
 
       # If a category of a column is not generated in the synthetic dataset, pmf of zero is assigned
       if len(real_pmf)!=len(fake_pmf):
-        zero_cats = set(real[column].value_counts().keys())-set(fake[column].value_counts().keys())
-        for z in zero_cats:
+        zero_cats_real = set(real[column].value_counts().keys())-set(fake[column].value_counts().keys())
+        zero_cats_fake = set(fake[column].value_counts().keys()) - set(real[column].value_counts().keys())
+
+        for z in zero_cats_real:
           real_pmf_ordered.append(real_pmf[z])
           fake_pmf_ordered.append(0)
+
 
       # Computing the statistical similarity between real and synthetic pmfs
       cat_stat.append(distance.jensenshannon(real_pmf_ordered,fake_pmf_ordered, 2.0))

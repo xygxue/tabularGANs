@@ -4,10 +4,10 @@ import torch
 from sklearn.linear_model import LinearRegression
 from torch import optim
 
-from lib.algos.base import BaseAlgo, BaseConfig
-from lib.augmentations import SignatureConfig
-from lib.augmentations import augment_path_and_compute_signatures
-from lib.utils import sample_indices, to_numpy
+from cswgan.lib.algos.base import BaseAlgo, BaseConfig
+from cswgan.lib.augmentations import SignatureConfig
+from cswgan.lib.augmentations import augment_path_and_compute_signatures
+from cswgan.lib.utils import sample_indices, to_numpy
 
 
 def sigcwgan_loss(sig_pred: torch.Tensor, sig_fake_conditional_expectation: torch.Tensor):
