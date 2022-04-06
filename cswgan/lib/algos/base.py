@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import torch
 from tqdm import tqdm
 
-from cswgan.lib.arfnn import SimpleGenerator
-from cswgan.lib.test_metrics import test_metrics
-from cswgan.lib.utils import to_numpy
+from lib.arfnn import SimpleGenerator
+from lib.test_metrics import test_metrics
+from lib.utils import to_numpy
 
 
 @dataclass

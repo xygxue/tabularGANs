@@ -25,7 +25,6 @@ class DataPrep(object):
 
     """
 
-
     def __init__(self, raw_df: pd.DataFrame, categorical: list, log:list, mixed:dict, integer:list, type:dict, test_ratio:float):
         
         self.categorical_columns = categorical

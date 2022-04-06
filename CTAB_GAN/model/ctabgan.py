@@ -1,9 +1,9 @@
 import pandas as pd
 import time
 # Used for pre/post-processing of the input/generated data
-from CTAB_GAN.model.pipeline.data_preparation import DataPrep
+from model.pipeline.data_preparation import DataPrep
 # Model class for the CTABGANSynthesizer
-from CTAB_GAN.model.synthesizer.ctabgan_synthesizer import CTABGANSynthesizer
+from model.synthesizer.ctabgan_synthesizer import CTABGANSynthesizer
 
 import warnings
 
