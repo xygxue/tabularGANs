@@ -76,4 +76,15 @@ def process(filename, cat_col, date_column, dataset):
               index=False)
 
 
+def min_acc():
+    csv_path = os.path.join(Path(__file__).parents[0], 'resources/real_datasets', 'czech_bank', 'clean_trans.csv')
+    df = pd.read_csv(csv_path)
+    df = df.set_index('date')
+    accs = df.account_id.unique()
+    min_acc = 100000
+    grp = df.groupby(['account_id'])
+    min_len = grp.size().min()
+    return min_len
 
+result, account = min_acc()
+result

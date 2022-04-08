@@ -1,5 +1,6 @@
 import itertools
 import os
+import sys
 from os import path as pt
 
 import matplotlib.pyplot as plt
@@ -14,6 +15,8 @@ from lib.data import download_man_ahl_dataset, download_mit_ecg_dataset
 from lib.data import get_data
 from lib.plot import savefig, create_summary
 from lib.utils import pickle_it
+
+sys.path.insert(1, '/ctabgan/CTAB_GAN/model/pipeline')
 
 
 def get_algo_config(dataset, data_params):
@@ -95,7 +98,7 @@ def get_dataset_configuration(dataset):
     elif dataset == 'SINE':
         generator = [('a', dict())]
     elif dataset == "CZB":
-        generator = [('A0000002378', dict(acc_id='A0000002378'))]
+        generator = [('A0000000438', dict(acc_id='A0000000438'))]
     else:
         raise Exception('%s not a valid data type.' % dataset)
     return generator
@@ -104,9 +107,9 @@ def get_dataset_configuration(dataset):
 def main(args):
     if not pt.exists('./data'):
         os.mkdir('./data')
-    if not pt.exists('./data/oxfordmanrealizedvolatilityindices.csv'):
-        print('Downloading Oxford MAN AHL realised library...')
-        download_man_ahl_dataset()
+    # if not pt.exists('./data/oxfordmanrealizedvolatilityindices.csv'):
+    #     print('Downloading Oxford MAN AHL realised library...')
+    #     download_man_ahl_dataset()
     #if not pt.exists('./data/mitdb'):
     #    print('Downloading MIT-ECG database...')
     #    download_mit_ecg_dataset()
@@ -145,16 +148,16 @@ if __name__ == '__main__':
     # Meta parameters
     parser.add_argument('-base_dir', default='./numerical_results', type=str)
     parser.add_argument('-use_cuda', action='store_true')
-    parser.add_argument('-device', default=1, type=int)
+    parser.add_argument('-device', default=0, type=int)
     parser.add_argument('-num_seeds', default=1, type=int)
     parser.add_argument('-initial_seed', default=0, type=int)
-    #parser.add_argument('-datasets', default=['ARCH', 'STOCKS', 'ECG', 'VAR', ], nargs="+")
-    parser.add_argument('-datasets', default=['STOCKS', 'ARCH', 'VAR', 'CZB'], nargs="+")
-    parser.add_argument('-algos', default=['SigCWGAN', 'GMMN', 'RCGAN', 'TimeGAN', 'RCWGAN', 'CWGAN',], nargs="+")
-
+    # parser.add_argument('-datasets', default=['ARCH', 'STOCKS', 'ECG', 'VAR', ], nargs="+")
+    parser.add_argument('-datasets', default=['CZB'], nargs="+")
+    # parser.add_argument('-algos', default=['SigCWGAN', 'GMMN', 'RCGAN', 'TimeGAN', 'RCWGAN', 'CWGAN',], nargs="+")
+    parser.add_argument('-algos', default=['SigCWGAN'], nargs="+")
 
     # Algo hyperparameters
-    parser.add_argument('-batch_size', default=200, type=int)
+    parser.add_argument('-batch_size', default=15, type=int)
     parser.add_argument('-p', default=3, type=int)
     parser.add_argument('-q', default=3, type=int)
     parser.add_argument('-hidden_dims', default=3 * (50,), type=tuple)

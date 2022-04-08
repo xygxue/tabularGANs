@@ -4,10 +4,10 @@ import torch
 from sklearn.linear_model import LinearRegression
 from torch import optim
 
-from cswgan.lib.algos.base import BaseAlgo, BaseConfig
-from cswgan.lib.augmentations import SignatureConfig
-from cswgan.lib.augmentations import augment_path_and_compute_signatures
-from cswgan.lib.utils import sample_indices, to_numpy
+from lib.algos.base import BaseAlgo, BaseConfig
+from lib.augmentations import SignatureConfig
+from lib.augmentations import augment_path_and_compute_signatures
+from lib.utils import sample_indices, to_numpy
 
 
 def sigcwgan_loss(sig_pred: torch.Tensor, sig_fake_conditional_expectation: torch.Tensor):
@@ -67,8 +67,8 @@ class SigCWGAN(BaseAlgo):
     def sample_batch(self, ):
         random_indices = sample_indices(self.sigs_pred.shape[0], self.batch_size)  # sample indices
         # sample the least squares signature and the log-rtn condition
-        sigs_pred = self.sigs_pred[random_indices].clone().to(self.device)
-        x_past = self.x_past[random_indices].clone().to(self.device)
+        sigs_pred = self.sigs_pred[random_indices.long()].clone().to(self.device)
+        x_past = self.x_past[random_indices.long()].clone().to(self.device)
         return sigs_pred, x_past
 
     def step(self):

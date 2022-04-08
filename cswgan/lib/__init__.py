@@ -1,2 +1,2 @@
-from cswgan.lib import augmentations
-from cswgan.lib.algos import *
+from lib import augmentations
+from lib.algos import *
