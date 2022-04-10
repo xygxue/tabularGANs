@@ -86,5 +86,22 @@ def min_acc():
     min_len = grp.size().min()
     return min_len
 
-result, account = min_acc()
-result
+
+def tablegan_data(filename, dataset):
+    csv_path = os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, f"{filename}.csv")
+    raw = pd.read_csv(csv_path)
+
+    def ctpy_check(row):
+        if row['bank'] == 13 and row['account'] == 1715:
+            return 0
+        else:
+            return 1
+    label_df = pd.DataFrame()
+    label_df['label'] = raw.apply(lambda row: ctpy_check(row), axis=1)
+    label_df.to_csv(os.path.join(Path(__file__).parents[0],
+                                 'resources/real_datasets',
+                                 dataset, f"{filename}_labels.csv"),
+                    index=False, header=False)
+
+
+tablegan_data('labelencode_trans_3', DATASET)

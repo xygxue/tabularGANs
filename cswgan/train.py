@@ -56,7 +56,7 @@ def run(algo_id, base_config, base_dir, dataset, spec, data_params={}):
     x_real = get_data(dataset, base_config.p, base_config.q, **data_params)
     x_real = x_real.to(base_config.device)
     ind_train = int(x_real.shape[0] * 0.8)
-    x_real_train, x_real_test = x_real[:ind_train], x_real[ind_train:] #train_test_split(x_real, train_size = 0.8)
+    x_real_train, x_real_test = x_real[:ind_train], x_real[ind_train:] # train_test_split(x_real, train_size = 0.8)
 
     algo = get_algo(algo_id, base_config, dataset, data_params, x_real_train)
     # Train the algorithm
