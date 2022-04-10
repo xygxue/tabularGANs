@@ -18,9 +18,7 @@ fake_path = os.path.join(Path(__file__).parent, 'resources/fake_datasets', datas
 today = date.today()
 cur_date = today.strftime("%Y-%m-%d")
 
-raw_data = pd.read_csv(real_path)
-real_data = pad_leading_zero(raw_data, ['account'])
-real_data['account'] = ('C' + real_data['account']).astype('category')
+real_data = pd.read_csv(real_path, dtype={'account': 'object'})
 
 real_data_len = real_data.shape[0]
 

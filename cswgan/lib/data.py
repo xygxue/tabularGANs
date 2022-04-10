@@ -149,17 +149,17 @@ def get_arch_dataset(window_size, lag=4, bt=0.055, N=5000, dim=1):
 
 
 def get_cz_bank_data(acc_id=None):
-    CAT = ['account_id', 'type']
+    CAT = ['account_id', 'type', 'operation', 'k_symbol', 'bank', 'account']
     LOG = ['amount', 'balance']
-    MIXED = {}
+    MIXED = {'k_symbol': [7], 'bank': [13], 'account': [7665]}
     INTEGER = [] 
     PROBLEM = {"Classification": 'type'}
-    cat_onehot = ['type']
+    cat_onehot = ['type', 'operation', 'k_symbol', 'bank', 'account']
     csv_path = os.path.join(Path(__file__).parents[2], 'src/main/resources/real_datasets', 'czech_bank', 'clean_trans.csv')
     df = pd.read_csv(csv_path)
     df = df.set_index('date')
     data_raw = df.loc[df['account_id'] == acc_id]
-    data_raw = data_raw.drop(columns=['account_id', 'trans_id', 'operation', 'k_symbol', 'bank', 'account'])
+    data_raw = data_raw.drop(columns=['account_id', 'trans_id'])
     data_prep = DataPrep(data_raw, categorical=CAT,
                          log=LOG,
                          mixed=MIXED,

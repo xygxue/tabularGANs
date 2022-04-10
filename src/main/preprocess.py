@@ -62,8 +62,11 @@ def preprocess(filename, date_column, le_map_path, dataset):
 # splited_df[0].to_csv(os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, 'trans_3.csv'), index=False)
 
 
-def process(filename, cat_col, date_column, dataset):
-    csv_path = os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, filename)
+def process(filename, cat_col, date_column, dataset, real):
+    if real:
+        csv_path = os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, filename)
+    else:
+        csv_path = os.path.join(Path(__file__).parents[0], 'resources/fake_datasets', dataset, filename)
     df = pd.read_csv(csv_path)
     df['first_day'] = '1993-01-01'
     df['first_day'] = pd.to_datetime(df['first_day'])
@@ -72,8 +75,13 @@ def process(filename, cat_col, date_column, dataset):
     df[date_column] = df[date_column].dt.days
     df[cat_col] = df[cat_col].apply(LabelEncoder().fit_transform)
     df_out = df.drop(columns=['first_day'])
-    df_out.to_csv(os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, 'labelencode_' + filename),
-              index=False)
+    if real:
+        df_out.to_csv(os.path.join(Path(__file__).parents[0], 'resources/real_datasets', dataset, 'labelencode_' + filename),
+                  index=False)
+    else:
+        df_out.to_csv(
+            os.path.join(Path(__file__).parents[0], 'resources/fake_datasets', dataset, 'labelencode_' + filename),
+            index=False)
 
 
 def min_acc():
@@ -104,4 +112,4 @@ def tablegan_data(filename, dataset):
                     index=False, header=False)
 
 
-tablegan_data('labelencode_trans_3', DATASET)
+process('ctgan_fake_3_2022-04-10.csv', CAT_COL, 'date', DATASET, real=True)

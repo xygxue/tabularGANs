@@ -219,6 +219,7 @@ def stat_sim(real_path,fake_path,cat_cols=None):
         zero_cats_real = set(real[column].value_counts().keys())-set(fake[column].value_counts().keys())
         zero_cats_fake = set(fake[column].value_counts().keys()) - set(real[column].value_counts().keys())
 
+
         for z in zero_cats_real:
           real_pmf_ordered.append(real_pmf[z])
           fake_pmf_ordered.append(0)
