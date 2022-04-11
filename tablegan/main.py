@@ -6,6 +6,7 @@ Modified: 10/15/2018
 """
 import os
 import datetime
+
 import tensorflow.compat.v1 as tf
 import sys
 
