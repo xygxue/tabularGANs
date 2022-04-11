@@ -13,7 +13,7 @@ from time import gmtime, strftime
 from six.moves import xrange
 
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
+import tf_slim as slim
 import os
 import matplotlib.pyplot as plt
 

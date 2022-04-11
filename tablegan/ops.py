@@ -2,6 +2,7 @@ import math
 import numpy as np
 import tensorflow as tf
 
+
 from tensorflow.python.framework import ops
 
 from utils import *
@@ -16,8 +17,7 @@ except:
     image_summary = tf.summary.image
     scalar_summary = tf.summary.scalar
     histogram_summary = tf.summary.histogram
-    merge_summary = tf.summary.merge
-    SummaryWriter = tf.summary.FileWriter
+
 
 if "concat_v2" in dir(tf):
     def concat(tensors, axis, *args, **kwargs):
@@ -29,7 +29,7 @@ else:
 
 class batch_norm(object):
     def __init__(self, epsilon=1e-5, momentum=0.9, name="batch_norm"):
-        with tf.variable_scope(name):
+        with tf.compat.v1.variable_scope(name):
             self.epsilon = epsilon
             self.momentum = momentum
             self.name = name
