@@ -11,7 +11,7 @@ from cswgan.lib.plot import compare_hists
 
 cur_date = '2022-04-10'
 exp = 2
-real_datafile = 'labelencode_trans_3.csv'
+real_datafile = 'CZB.csv'
 fake_datafile = 'labelencode_ctgan_fake_3_2022-04-10.csv'
 
 classifiers_list = ["lr", "dt", "rf", "mlp", "svm"]
