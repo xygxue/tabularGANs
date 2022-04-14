@@ -36,8 +36,8 @@ class DataTransformer():
         
         self.meta = None
         self.train_data = train_data
-        self.categorical_columns= categorical_list
-        self.mixed_columns= mixed_dict
+        self.categorical_columns = categorical_list
+        self.mixed_columns = mixed_dict
         self.n_clusters = n_clusters
         self.eps = eps
         self.ordering = []
@@ -52,7 +52,7 @@ class DataTransformer():
         meta = []
     
         for index in range(self.train_data.shape[1]):
-            column = self.train_data.iloc[:,index]
+            column = self.train_data.iloc[:, index]
             if index in self.categorical_columns:
                 mapper = column.value_counts().index.tolist()
                 meta.append({

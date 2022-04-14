@@ -582,7 +582,7 @@ class CTABGANSynthesizer:
         self.generator = None
 
     def fit(self, train_data=pd.DataFrame, categorical=[], mixed={}, type={}):
-        
+        print(self.device)
         # obtaining the column index of the target column used for ML tasks
         problem_type = None
         target_index = None
@@ -621,7 +621,6 @@ class CTABGANSynthesizer:
             if i * i >= col_size_g:
                 self.gside = i
                 break
-		
         # constructing the generator and discriminator networks
         layers_G = determine_layers_gen(self.gside, self.random_dim+self.cond_generator.n_opt, self.num_channels)
         layers_D = determine_layers_disc(self.dside, self.num_channels)
@@ -633,10 +632,10 @@ class CTABGANSynthesizer:
         optimizerG = Adam(self.generator.parameters(), **optimizer_params)
         optimizerD = Adam(discriminator.parameters(), **optimizer_params)
 
-       
         st_ed = None
-        classifier=None
-        optimizerC= None
+        classifier = None
+        optimizerC = None
+
         if target_index != None:
             # obtaining the one-hot-encoding starting and ending positions of the target column in the transformed data
             st_ed= get_st_ed(target_index,self.transformer.output_info)

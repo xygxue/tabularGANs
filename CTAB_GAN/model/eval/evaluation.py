@@ -35,37 +35,37 @@ def supervised_model_training(x_train, y_train, x_test, y_test, model_name):
 
   # Selecting the model
   if model_name == 'lr':
-    model  = LogisticRegression(random_state=0,max_iter=500)
+    model  = LogisticRegression(random_state=0, max_iter=500)
   elif model_name == 'svm':
-    model  = svm.SVC(random_state=0,probability=True)
+    model  = svm.SVC(random_state=0, probability=True)
   elif model_name == 'dt':
     model  = tree.DecisionTreeClassifier(random_state=0)
   elif model_name == 'rf':
     model = RandomForestClassifier(random_state=0)
   elif model_name == "mlp":
-    model = MLPClassifier(random_state=0,max_iter=100)
+    model = MLPClassifier(random_state=0, max_iter=100)
 
   # Fitting the model and computing predictions on test data
   model.fit(x_train, y_train)
   pred = model.predict(x_test)
 
   # In case of multi-class classification AUC and F1-scores are computed using weighted averages across all distinct labels
-  if len(np.unique(y_train))>2:
+  if len(np.unique(y_train)) > 2:
     predict = model.predict_proba(x_test)
-    acc = metrics.accuracy_score(y_test,pred)*100
-    auc = metrics.roc_auc_score(y_test, predict,average="weighted",multi_class="ovr")
-    f1_score = metrics.precision_recall_fscore_support(y_test, pred,average="weighted")[2]
+    acc = metrics.accuracy_score(y_test, pred)*100
+    auc = metrics.roc_auc_score(y_test, predict, average="weighted", multi_class="ovr")
+    f1_score = metrics.precision_recall_fscore_support(y_test, pred, average="weighted")[2]
     return [acc, auc, f1_score]
 
   else:
-    predict = model.predict_proba(x_test)[:,1]
-    acc = metrics.accuracy_score(y_test,pred)*100
+    predict = model.predict_proba(x_test)[:, 1]
+    acc = metrics.accuracy_score(y_test, pred)
     auc = metrics.roc_auc_score(y_test, predict)
-    f1_score = metrics.precision_recall_fscore_support(y_test,pred)[2].mean()
+    f1_score = metrics.precision_recall_fscore_support(y_test, pred)[2].mean()
     return [acc, auc, f1_score]
 
 
-def get_utility_metrics(real_path, fake_paths, scaler="MinMax", classifiers=["lr","dt","rf","mlp"], test_ratio=.20):
+def get_utility_metrics(real_path, fake_paths, scaler="MinMax", classifiers=["lr", "dt", "rf", "mlp"], test_ratio=.20):
 
     """
     Returns ML utility metrics
@@ -117,7 +117,7 @@ def get_utility_metrics(real_path, fake_paths, scaler="MinMax", classifiers=["lr
     # Computing metrics across ML models trained using real training data on real test data
     all_real_results = []
     for classifier in classifiers:
-      real_results = supervised_model_training(X_train_real_scaled,y_train_real,X_test_real_scaled, y_test_real, classifier)
+      real_results = supervised_model_training(X_train_real_scaled, y_train_real, X_test_real_scaled, y_test_real, classifier)
       all_real_results.append(real_results)
 
     # Computing metrics across ML models trained using corresponding synthetic training datasets on real test data  
@@ -150,15 +150,16 @@ def get_utility_metrics(real_path, fake_paths, scaler="MinMax", classifiers=["lr
       # Computing metrics across ML models trained on synthetic training data on real test data
       all_fake_results = []
       for classifier in classifiers:
-        fake_results = supervised_model_training(X_train_fake_scaled,y_train_fake,X_test_real_scaled,y_test_real,classifier)
+        fake_results = supervised_model_training(X_train_fake_scaled, y_train_fake, X_test_real_scaled, y_test_real, classifier)
         all_fake_results.append(fake_results)
 
       # Storing the results across synthetic datasets
       all_fake_results_avg.append(all_fake_results)
 
     # Returning the final avg difference between metrics of ML models trained using real vs synthetic datasets. 
-    diff_results = np.array(all_real_results)- np.array(all_fake_results_avg).mean(axis=0)
+    diff_results = np.array(all_real_results) - np.array(all_fake_results_avg).mean(axis=0)
     return diff_results
+
 
 def stat_sim(real_path,fake_path,cat_cols=None):
 

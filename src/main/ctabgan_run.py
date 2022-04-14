@@ -9,18 +9,18 @@ from CTAB_GAN.model.ctabgan import CTABGAN
 num_exp = 1
 
 dataset = "czech_bank"
-real_datafile = 'trans_1.csv'
+real_datafile = 'labelencode_trans_3.csv'
 real_path = os.path.join(Path(__file__).parent, 'resources/real_datasets', dataset, real_datafile)
-fake_path = os.path.join(Path(__file__).parent, 'resources/fake_datasets', dataset, 'fake_{exp}_{cur_date}.csv')
+fake_path = os.path.join(Path(__file__).parent, 'resources/fake_datasets', dataset, 'ctabgan_fake_{exp}_{cur_date}.csv')
 
 
 synthesizer = CTABGAN(raw_csv_path=real_path,
                       test_ratio=0.20,
                       categorical_columns=['account_id', 'type', 'operation', 'k_symbol', 'bank', 'account'],
                       log_columns=['amount', 'balance'],
-                      mixed_columns={'k_symbol': [7], 'bank': [13], 'account': [7665]},
-                      integer_columns=['year', 'month', 'day', 'dayofweek'],
-                      problem_type={"Classification": 'type'},
+                      mixed_columns={'k_symbol': [0.0], 'bank': [0.0], 'account': [0.0]},
+                      integer_columns=['amount', 'balance'],
+                      problem_type={"Classification": 'operation'},
                       epochs=100)
 
 
